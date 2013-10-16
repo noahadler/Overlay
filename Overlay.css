@@ -1,0 +1,29 @@
+#header { position:fixed;background-color:white;width:100%; 
+  display: table;
+}
+
+#header > div { float:left; margin-right: 20px; vertical-align: middle; display: table-cell;}
+
+#searchbox, #progress { padding-top: 16px; }
+
+div.thumbnail { display:inline-block;padding:4px;width:64px;text-align:center;overflow:hidden;}
+
+div.thumbnail img { max-width:64px; }
+
+div.file_detail_popup {
+  visibility:hidden;
+  position:static;
+  overflow:visible;
+}
+
+div.vis{
+  visibility:visible !important;
+  width:50px;
+  height:24px;
+  background-color:white;
+}
+
+
+#main-content {
+  margin-top: 5em;
+}

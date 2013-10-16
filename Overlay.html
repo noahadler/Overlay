@@ -1,0 +1,97 @@
+<head>
+  <title>Overlay</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row" id="header">
+      <div><h1>Overlay</h1></div>
+      <div><h2>media and metadata search</h2></div>
+      <div id="searchbox"><i class="icon-search"></i>{{> searchbox}}</div>
+      <div id="progress">{{> progress}}</div>
+      <div>{{loginButtons align="left"}}</div>
+    </div>
+    <div class="row" id="main-content">
+      <div class="span3">
+        {{> tools}}
+        {{> facets}}
+      </div>
+      <div class="span9">
+        {{> current_view}}
+      </div>
+    </div>
+  </div>
+</body>
+
+<template name="current_view">
+  {{{content}}}
+</template>
+
+<template name="searchbox">
+  <input type="search" class="input-medium search-query" name="searchbox" />
+  <input type="button" class="btn" value="Search" />
+</template>
+
+<template name="progress">
+  <progress id="progress-bar"  value="0" max="100" />
+</template>
+
+<template name="tools">
+  <h3>Tools</h3>
+  <a class="btn span2" href="#"><i class="icon-upload"></i> Upload</a>
+  <a class="btn span2" href="/"><i class="icon-th"></i> Pinboard</a>
+  <a class="btn span2" href="#"><i class="icon-code-fork"></i> Network</a>
+  <a class="btn span2" href="/map/"><i class="icon-pushpin"></i> Map</a>
+  <a class="btn span2" href="#"><i class="icon-signal"></i> Visualize</a>
+  <a class="btn span2" href="#"><i class="icon-group"></i> Team</a>
+  <a class="btn span2" href="#"><i class="icon-download"></i> Export</a>
+</template>
+
+<template name="facets">
+<h3>Facets</h3>
+{{#each arrayify facet}}
+  <div class="facet">
+    <h5>{{name}}</h5>
+    {{> facet}}
+  </div>
+{{/each}}
+</template>
+
+<template name="facet">
+  {{log this}}
+  
+  <ul>
+  {{#each arrayify value}}
+    <li>{{name}} ({{value}})</li>
+  {{/each}}
+  </ul>
+</template>
+
+<template name="thumbnails">
+<h3>Results</h3>
+<p>{{ numFound }} results</p>
+{{#each doc}}
+  <div class="thumbnail">
+    <img src="thumbnails/{{md5}}.jpg" alt="{{file}}"/>
+    <div class="modal hide" role="dialog" aria-labelledby="{{ss_md5}}">
+      <div class="modal-header">
+        <h3>{{thumbnail}}</h3>
+        <a href="{{file}}" class="btn"><i class="icon-download"></i> Download</a>
+      </div>
+      <div class="modal-body">
+        <ul>
+        {{#each arrayify this}}
+          <li><strong>{{name}}:</strong> {{value}}</li>
+        {{/each}}
+        </ul>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+{{/each}}
+</template>
+
+<template name="map">
+<h3>Map</h3>
+</template>
