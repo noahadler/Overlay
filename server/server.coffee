@@ -4,8 +4,12 @@ Meteor.publish 'searchResults', (search) ->
 Meteor.publish 'indexedFiles', (search = '') ->
   IndexedFiles.find {file: {$regex: search, $options: 'i' }}, {limit: 50}
   #IndexedFiles.find {file: {$regex: '/Dentist/' }}, {limit: 200}
+
+Meteor.publish 'jobQueue', ->
+  JobQueue.find {}
       
 Meteor.startup ->
+  #JobQueue.remove {}
   console.log 'Solr server: ' + solrBase
   #IndexedFiles.remove {}
   console.log IndexedFiles.find({}).fetch().length + ' currently indexed'

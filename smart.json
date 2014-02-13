@@ -10,7 +10,8 @@
       "path": "../MeteorPackages/imagemagick"
     },
     "accounts-ui-bootstrap-dropdown": {},
-    "font-awesome": {}
+    "font-awesome": {},
+    "moment": {}
   },
   "private": {
     "base": "../MeteorPackages",

@@ -27,6 +27,9 @@ Meteor.saveFile = function(blob, name, path, type, callback) {
   fileReader.onload = function(file) {
     Meteor.call('saveFile', file.srcElement.result, name, path, encoding, callback);
   }
+  fileReader.onprogress = function(e) {
+    Session.set('progress', parseInt(e.loaded * 100.0/ e.total));
+  }
   fileReader[method](blob);
 }
 

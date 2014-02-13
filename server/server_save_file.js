@@ -19,7 +19,10 @@ Meteor.methods({
         throw (new Meteor.Error(500, 'Failed to save file.', err));
       } else {
         console.log('The file ' + name + ' (' + encoding + ') was saved to ' + path);
+
         process_file(path+name);
+        new Processors.Md5(path+name);
+        new Processors.Tika(path+name);
       }
     }); 
  

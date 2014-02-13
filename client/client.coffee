@@ -5,6 +5,9 @@ Deps.autorun ->
 Deps.autorun ->
   Meteor.subscribe 'indexedFiles', Session.get('search')
 
+Deps.autorun ->
+  Meteor.subscribe 'jobQueue'
+
 Session.set 'current_view', 'thumbnails'
 
 Template.searchbox.events
@@ -27,6 +30,9 @@ Handlebars.registerHelper 'arrayify', (obj) ->
 
 Template.current_view.content = ->
   a = Template[Session.get 'current_view']()
+
+Template.progress.helpers
+  progress: -> parseInt Session.get 'progress'
 
 Template.facets.facet = ->
   console.log 'facet template...'
@@ -73,4 +79,16 @@ Template.thumbnails.doc = ->
 Template.thumbnails.events
   'click .thumbnail': (e) ->
     $(e.currentTarget).find('.modal').modal()
+
+Template.queue.helpers
+  queuedItems: -> JobQueue.find()
+  fromNow: (date) ->
+    d = Deps.currentComputation
+
+    setTimeout ->
+      d.invalidate()
+    , 5000
+
+    moment(date).fromNow()
+
 
