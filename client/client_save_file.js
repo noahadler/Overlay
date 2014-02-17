@@ -24,12 +24,30 @@ Meteor.saveFile = function(blob, name, path, type, callback) {
       encoding = 'binary';
       break;
   }
+
+  transferred = 0
+
   fileReader.onload = function(file) {
-    Meteor.call('saveFile', file.srcElement.result, name, path, encoding, callback);
+    //Meteor.call('saveFile', file.srcElement.result, name, path, encoding, callback);
+
   }
+
+  outputProgress = _.throttle(function(e) {
+    console.log('Upload progress: ' + parseInt(e.loaded * 100.0/ e.total));
+    // call meteor method for partial upload?
+    //console.log
+    var pending = e.loaded - transferred;
+    console.log('pending to send: ' + pending + ' bytes');
+    console.log('result length: ' + e.srcElement.result.length + ' bytes');
+    //wait = Meteor.call('saveFilePart', e.srcElement.result.substr(transferred, pending), name, path, encoding);
+    transferred += pending;    
+  }, 2000);
+
   fileReader.onprogress = function(e) {
+    //outputProgress(e);
     Session.set('progress', parseInt(e.loaded * 100.0/ e.total));
   }
+
   fileReader[method](blob);
 }
 

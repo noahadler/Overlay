@@ -6,7 +6,7 @@ Meteor.publish 'indexedFiles', (search = '') ->
   #IndexedFiles.find {file: {$regex: '/Dentist/' }}, {limit: 200}
 
 Meteor.publish 'jobQueue', ->
-  JobQueue.find {}
+  JobQueue.find {}, {limit: 100}
       
 Meteor.startup ->
   #JobQueue.remove {}

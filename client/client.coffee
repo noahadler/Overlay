@@ -81,7 +81,7 @@ Template.thumbnails.events
     $(e.currentTarget).find('.modal').modal()
 
 Template.queue.helpers
-  queuedItems: -> JobQueue.find()
+  queuedItems: -> JobQueue.find {}, {sort: {submitTime: -1}}
   fromNow: (date) ->
     d = Deps.currentComputation
 

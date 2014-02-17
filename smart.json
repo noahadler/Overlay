@@ -11,7 +11,8 @@
     },
     "accounts-ui-bootstrap-dropdown": {},
     "font-awesome": {},
-    "moment": {}
+    "moment": {},
+    "meteor-file": {}
   },
   "private": {
     "base": "../MeteorPackages",

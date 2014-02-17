@@ -19,7 +19,12 @@ doc.ondrop = (e) ->
       files = e.dataTransfer.files
       console.log files
 
-      Meteor.saveFile file, file.name for file in files
+      #Meteor.saveFile file, file.name for file in files
+      for file in files
+        MeteorFile.upload file, 'meteorFileUpload', {}, ->
+          console.log 'callback meteorFileUpload'
+          console.log arguments
+
     else if entry.isDirectory
       console.log entry
       traverse = (item, path) ->
@@ -29,7 +34,10 @@ doc.ondrop = (e) ->
           console.log 'file '
           console.log item
           item.file (file) ->
-            Meteor.saveFile file, file.name
+            console.log 'uploading file starting at ' + new Date()
+            #Meteor.saveFile file, file.name
+            MeteorFile.upload file, 'meteorFileUpload', {}, ->
+              console.log 'done uploading file at ' + new Date()
         else if item.isDirectory
           console.log 'directory '
           console.log item
