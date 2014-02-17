@@ -3,22 +3,9 @@
     "router": {},
     "async": {},
     "npm": {},
-    "ApplicationFileServer": {
-      "path": "../MeteorPackages/ApplicationFileServer"
-    },
-    "imagemagick": {
-      "path": "../MeteorPackages/imagemagick"
-    },
     "accounts-ui-bootstrap-dropdown": {},
     "font-awesome": {},
     "moment": {},
     "meteor-file": {}
-  },
-  "private": {
-    "base": "../MeteorPackages",
-    "packages": {
-      "ApplicationFileServer": "ApplicationFileServer",
-      "imagemagick": "imagemagick"
-    }
   }
 }

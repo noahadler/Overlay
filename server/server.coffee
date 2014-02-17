@@ -9,9 +9,9 @@ Meteor.publish 'jobQueue', ->
   JobQueue.find {}, {limit: 100}
       
 Meteor.startup ->
-  #JobQueue.remove {}
+  JobQueue.remove {}
   console.log 'Solr server: ' + solrBase
-  #IndexedFiles.remove {}
+  IndexedFiles.remove {}
   console.log IndexedFiles.find({}).fetch().length + ' currently indexed'
   return
   # Start by scanning files and building the collection
