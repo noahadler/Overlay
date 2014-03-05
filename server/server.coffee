@@ -10,7 +10,6 @@ Meteor.publish 'jobQueue', ->
       
 Meteor.startup ->
   JobQueue.remove {}
-  console.log 'Solr server: ' + solrBase
   IndexedFiles.remove {}
   console.log IndexedFiles.find({}).fetch().length + ' currently indexed'
   return

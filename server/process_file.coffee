@@ -106,7 +106,7 @@
           metadata_fields += '<field name="sm_'+solr_key+'">'+escapeEntities(v)+'</field>'
           
 
-        solrDoc = '<add overwrite="true"><doc><field name="ss_filename">'+escapeEntities(f)+'</field><field name="id">'+md5+'</field><field name="ss_md5">'+md5+'</field><field name="content">'+escapeEntities(f)+'</field>'+path_terms+metadata_fields+'</doc></add>'
+        ###solrDoc = '<add overwrite="true"><doc><field name="ss_filename">'+escapeEntities(f)+'</field><field name="id">'+md5+'</field><field name="ss_md5">'+md5+'</field><field name="content">'+escapeEntities(f)+'</field>'+path_terms+metadata_fields+'</doc></add>'
 
         Meteor.http.post solrBase + 'update?commit=true', {
           headers:
@@ -120,6 +120,7 @@
             console.log 'Error sending to solr: '
             console.log err
             console.log 'Query was: ' + solrDoc
+        ###
           
         #im.readMetadata(f, (err, metadata) ->
         ###

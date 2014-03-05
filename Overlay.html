@@ -14,7 +14,6 @@
     <div class="row" id="main-content">
       <div class="span3">
         {{> tools}}
-        {{> facets}}
       </div>
       <div class="span9">
         {{> current_view}}
@@ -46,26 +45,6 @@
   <a class="btn span2" href="#"><i class="icon-group"></i> Team</a>
   <a class="btn span2" href="/queue"><i class="icon-truck"></i> Job Queue</a>
   <a class="btn span2" href="#"><i class="icon-download"></i> Export</a>
-</template>
-
-<template name="facets">
-<h3>Facets</h3>
-{{#each arrayify facet}}
-  <div class="facet">
-    <h5>{{name}}</h5>
-    {{> facet}}
-  </div>
-{{/each}}
-</template>
-
-<template name="facet">
-  {{log this}}
-  
-  <ul>
-  {{#each arrayify value}}
-    <li>{{name}} ({{value}})</li>
-  {{/each}}
-  </ul>
 </template>
 
 <template name="thumbnails">
