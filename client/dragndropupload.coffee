@@ -1,3 +1,5 @@
+{FileRegistry} = require 'meteor/hive:file-registry'
+
 doc = document.documentElement
 doc.ondragover = (e) ->
   @className = 'hover'
@@ -22,9 +24,12 @@ doc.ondrop = (e) ->
         console.log files
 
         for file in files
-          MeteorFile.upload file, 'meteorFileUpload', {}, ->
-            console.log 'callback meteorFileUpload'
-            console.log arguments
+          FileRegistry.upload file, (fileId) ->
+            file = FileRegistry.findOne(fileId)
+            console.log 'callback FileRegistry.upload(file,cb)'
+          #MeteorFile.upload file, 'meteorFileUpload', {}, ->
+          #  console.log 'callback meteorFileUpload'
+          #  console.log arguments
 
       else if entry.isDirectory
         console.log entry
@@ -36,7 +41,7 @@ doc.ondrop = (e) ->
             console.log item
             item.file (file) ->
               console.log 'uploading file starting at ' + new Date()
-              MeteorFile.upload file, 'meteorFileUpload', {}, ->
+              FileRegistry.upload file, (fileId) ->
                 console.log 'done uploading file at ' + new Date()
           else if item.isDirectory
             console.log 'directory '

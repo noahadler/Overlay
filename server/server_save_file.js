@@ -62,10 +62,10 @@ Meteor.methods({
   }
 });
 
-Meteor.startup(function() {
+/*Meteor.startup(function() {
   //fs = Npm.require('fs');
   process.chdir('../../../../..');
   console.log('cwd: ' + process.cwd());
   //fs.symlinkSync('../../../../uploads', '.meteor/local/build/uploads');
-});
+});*/
 

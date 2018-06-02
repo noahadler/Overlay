@@ -12,7 +12,7 @@
 
 #searchbox, #progress { padding-top: 16px; }
 
-div.thumbnail { display:inline-block;padding:4px;width:64px;text-align:center;overflow:hidden;}
+div.thumbnail { display:inline-block;padding:4px;text-align:center;overflow:hidden;}
 
 div.thumbnail img { max-width:64px; }
 

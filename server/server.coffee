@@ -2,7 +2,7 @@ Meteor.publish 'searchResults', (search) ->
   SearchResults.find {search:search} #|| do (search) ->
 
 Meteor.publish 'indexedFiles', (search = '') ->
-  IndexedFiles.find {file: {$regex: search, $options: 'i' }}, {limit: 50}
+  FileRegistry.find {} #{file: {$regex: search, $options: 'i' }}, {limit: 50}
   #IndexedFiles.find {file: {$regex: '/Dentist/' }}, {limit: 200}
 
 Meteor.publish 'jobQueue', ->
@@ -11,7 +11,7 @@ Meteor.publish 'jobQueue', ->
 Meteor.startup ->
   JobQueue.remove {}
   IndexedFiles.remove {}
-  console.log IndexedFiles.find({}).fetch().length + ' currently indexed'
+  console.log FileRegistry.find({}).fetch().length + ' currently indexed'
   return
   # Start by scanning files and building the collection
   fs = Npm.require 'graceful-fs'
