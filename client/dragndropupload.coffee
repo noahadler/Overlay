@@ -1,4 +1,4 @@
-{FileRegistry} = require 'meteor/hive:file-registry'
+#{FileRegistry} = require 'meteor/hive:file-registry'
 
 doc = document.documentElement
 doc.ondragover = (e) ->

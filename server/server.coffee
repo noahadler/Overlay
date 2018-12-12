@@ -7,6 +7,9 @@ Meteor.publish 'indexedFiles', (search = '') ->
 
 Meteor.publish 'jobQueue', ->
   JobQueue.find {}, {limit: 100}
+
+Meteor.publish null, ->
+  Jobs.find {}, {limit: 100}
       
 Meteor.startup ->
   JobQueue.remove {}

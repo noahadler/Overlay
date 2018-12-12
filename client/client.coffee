@@ -24,7 +24,18 @@ Handlebars.registerHelper 'arrayify', (obj) ->
   {name:key, value: val} for own key, val of obj
 
 Template.progress.helpers
-  progress: -> parseInt Session.get 'progress'
+  #progress: -> parseInt Session.get 'progress'
+  progress: ->
+    current = 0
+    total = 0
+    uploads = UploadProgress.find({}).forEach (up) ->
+      if up.uploaded < up.total
+        current += up.uploaded
+        total += up.total
+    if total > 0
+      return parseInt ((100*current) / total)
+    else
+      return 0
 
 Template.thumbnails.helpers
   numFound: ->
@@ -41,6 +52,13 @@ Template.thumbnails.helpers
     path.split('/').pop()
   doc: ->
     FileRegistry.find({}, {limit: 50})
+  stillUploading: (f) ->
+    u = UploadProgress.findOne {name: f.filename}
+    u? && u.uploaded < u.total
+  uploadProgressPercent: (f) ->
+    u = UploadProgress.findOne {name: f.filename}
+    if u?
+      parseInt ((100*u.uploaded)/u.total)
 
 Template.thumbnails.events
   'click .thumbnail': (e, tpl) ->
@@ -57,9 +75,12 @@ Template.file_dialog.helpers
 Template.file_dialog.events
   'hidden.bs.modal': (e, tpl) ->
     Blaze.remove tpl.view
+  'click a.btn[name=toggle-embed-code]': (e, tpl) ->
+    tpl.$('.embed-code').toggle()
 
+Jobs = new Mongo.Collection 'jobs'
 Template.queue.helpers
-  queuedItems: -> JobQueue.find {}, {sort: {submitTime: -1}}
+  queuedItems: -> Jobs.find {}, {sort: {submitTime: -1}}
   fromNow: (date) ->
     d = Deps.currentComputation
 

@@ -44,13 +44,17 @@
 </template>
 
 <template name="thumbnails">
-<h3>Results</h3>
-<p>{{ numFound }} results</p>
-{{#each doc}}
-  <div class="thumbnail">
-    <img src="thumbnails/{{thumbnail}}" alt="{{filename}}"/>
-  </div>
-{{/each}}
+  <h3>Results</h3>
+  <p>{{ numFound }} results</p>
+  {{#each doc}}
+    <div class="thumbnail">
+      {{#if stillUploading this}}
+        <progress value="{{uploadProgressPercent this}}" style="max-width: 64px;" max="100"></progress>
+      {{else}}
+      <img src="thumbnails/{{thumbnail}}" alt="{{filename}}"/>
+      {{/if}}
+    </div>
+  {{/each}}
 </template>
 
 <template name="file_dialog">
@@ -60,15 +64,23 @@
         <div class="modal-header">
           <h3>{{filename}}</h3>
           {{#if endsWith filenameOnDisk '.mp4'}}
-            <video width="100%" autoplay="true"  src="uploads/{{filenameOnDisk}}"></video>
+            <video width="100%" style="width: 100%; min-height: 230px;" autoplay="true" controls="controls" src="uploads/{{filenameOnDisk}}"></video>
           {{/if}}
-          {{#if endsWith filenameOnDisk '.jpg' '.png'}}
+          {{#if endsWith filenameOnDisk '.jpg' '.png' '.gif' '.bmp'}}
             <img width="100%" src="uploads/{{filenameOnDisk}}">
           {{/if}}
           {{#if endsWith filenameOnDisk '.mp3' '.ogg'}}
             <audio width="100%" src="uploads/{{filenameOnDisk}}"></audio>
           {{/if}}
-          <a href="uploads/{{filenameOnDisk}}" target="_blank" class="btn"><i class="icon-download"></i> Download</a>
+          <a href="uploads/{{filenameOnDisk}}" target="_blank" class="btn">Download</a>
+          <a href="#" class="btn" name="toggle-embed-code">Embed</a>
+          <div class="embed-code" style="display: none;">
+            {{#if endsWith filenameOnDisk '.mp4'}}
+              <textarea class="form-control">
+                <video autoplay="true" controls="controls" src="uploads/{{filenameOnDisk}}"></video> 
+              </textarea>
+            {{/if}}
+          </div>
         </div>
         <div class="modal-body">
           <ul>
@@ -94,7 +106,7 @@
     <thead><th>Job #</th><th>File</th><th>Submit time</th><th>Processor</th><th>Status</th></thead>
     <tbody>
     {{#each queuedItems}}
-      <tr><td>#{{number}}</td><td>{{file}}</td><td>{{fromNow submitTime}}</td><td>{{processor}}</td><td>{{status}}</td></tr>
+      <tr><td>#{{number}}</td><td>{{filename}}</td><td>{{fromNow enqueued}}</td><td>{{name}}</td><td>{{status}}</td></tr>
     {{/each}}
   </tbody>
   </table>
