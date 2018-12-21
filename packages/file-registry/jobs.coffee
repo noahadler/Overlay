@@ -12,7 +12,8 @@ execProcesses = (cmd, env) ->
   Future = Npm.require 'fibers/future'
   cwd = process.cwd().substr(0, process.cwd().lastIndexOf('.meteor'))
 
-  console.log "Spawning SHELL: #{process.env.SHELL}"
+  #console.log "Spawning SHELL: #{process.env.SHELL}"
+  console.log "Running #{cmd}"
   p = spawn process.env.SHELL, [], {cwd: cwd, env: env}
   f = new Future()
   parse_text = ''
@@ -45,7 +46,7 @@ class @ThumbnailJob extends Job
       if ext in ['.pdf', '.ps']
         "gs -dBATCH -dNOPAUSE -sDEVICE=jpeg -sOutputFile=\"#{tmp}\" \"#{src}\" && convert \"#{tmp}\" -thumbnail 128x128 -background white \"#{dst}\" && rm \"#{tmp}\""
       else
-        "convert \"#{src}[0]\" -thumbnail 128x128 -background white \"#{dst}\""
+        "convert -flatten \"#{src}[0]\" -thumbnail 128x128 \"#{dst}\""
 
     execProcesses cmd
 
@@ -100,6 +101,11 @@ class @VideoTranscodeJob extends Job
     convertedFn = @params.filenameOnDisk.substr(0,@params.filenameOnDisk.lastIndexOf('.'))+'.'+@params.targetType
     dst = fr+convertedFn
     stats = fs.statSync dst
+
+    FileRegistry.update {filenameOnDisk: @params.filenameOnDisk}, {$set: {webVideo: convertedFn}}
+    Cluster.log 'VideoTranscodeJob: converted ', @params.filenameOnDisk, 'to type ', @params.targetType
+
+    ###
     FileRegistry.insert
       filename: converted
       filenameOnDisk: convertedFn
@@ -112,3 +118,31 @@ class @VideoTranscodeJob extends Job
     Job.push new ThumbnailJob filenameOnDisk: convertedFn
 
     Cluster.log 'VideoTranscodeJob: converted ', @params.filenameOnDisk, 'to type ', @params.targetType
+    ###
+
+# Extract X evenly-spaced frames from a video for rollover thumbnails
+class @VideoPreviewFramesJob extends Job
+  handleJob: ->
+    f = FileRegistry.findOne({filenameOnDisk: @params.filenameOnDisk})
+    fn = f.filename
+    fr = FileRegistry.getFileRoot()
+    fd = @params.filenameOnDisk
+    src = '"'+fr+@params.filenameOnDisk+'"'
+    videoLengthInSeconds=20 # TODO
+    cmd = "ffprobe #{src}"
+    ffprobe_stdout = (execProcesses cmd).stdout
+    getDurationHMS = (a) ->
+      (a.match /Duration: ([0-9]{2}):([0-9]{2}):([0-9]{2}.[0-9]+)/).slice(1,5).map((x) -> parseFloat(x) )
+    [h,m,s]= getDurationHMS ffprobe_stdout
+    duration = h*60*60+m*60+s;
+    console.log 'Duration in seconds: ', duration
+    for frame in [0..9]
+      thumbnail = fd.substr(0,fd.lastIndexOf('.'))+'_frame_'+frame+'.jpg'
+      dst = '"'+fr+thumbnail+'"'
+      ext = fd.substr(fd.lastIndexOf('.')).toLowerCase()
+      startingSecond = parseFloat(duration*frame/9.1)
+      cmd = "ffmpeg -ss #{startingSecond} -i #{src} -vframes 1 -filter:v 'yadif,scale=160:90' #{dst}"
+      execProcesses cmd
+      FileRegistry.update f._id, 
+        $push:
+          videoPreviewFrames: thumbnail

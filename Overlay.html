@@ -33,14 +33,14 @@
 
 <template name="tools">
   <h3>Tools</h3>
-  <a class="btn span2" href="#"><i class="icon-upload"></i> Upload</a>
-  <a class="btn span2" href="/"><i class="icon-th"></i> Pinboard</a>
-  <a class="btn span2" href="#"><i class="icon-code-fork"></i> Network</a>
-  <a class="btn span2" href="/map/"><i class="icon-pushpin"></i> Map</a>
-  <a class="btn span2" href="#"><i class="icon-signal"></i> Visualize</a>
-  <a class="btn span2" href="#"><i class="icon-group"></i> Team</a>
-  <a class="btn span2" href="/queue"><i class="icon-truck"></i> Job Queue</a>
-  <a class="btn span2" href="#"><i class="icon-download"></i> Export</a>
+  <a class="btn span2" href="#"><i class="fa fa-upload"></i> Upload</a>
+  <a class="btn span2" href="/"><i class="fa fa-th"></i> Pinboard</a>
+  <a class="btn span2" href="#"><i class="fa fa-code-fork"></i> Network</a>
+  <a class="btn span2" href="/map/"><i class="fa fa-globe"></i> Map</a>
+  <a class="btn span2" href="#"><i class="fa fa-signal"></i> Visualize</a>
+  <a class="btn span2" href="#"><i class="fa fa-group"></i> Team</a>
+  <a class="btn span2" href="/queue"><i class="fa fa-truck"></i> Job Queue</a>
+  <a class="btn span2" href="#"><i class="fa fa-download"></i> Export</a>
 </template>
 
 <template name="thumbnails">
@@ -51,7 +51,13 @@
       {{#if stillUploading this}}
         <progress value="{{uploadProgressPercent this}}" style="max-width: 64px;" max="100"></progress>
       {{else}}
-      <img src="thumbnails/{{thumbnail}}" alt="{{filename}}"/>
+        {{#if thumbnail}}
+          <img src="thumbnails/{{thumbnail}}" alt="{{filename}}"/>
+        {{else}}
+          <div style="width: 64px; height: 48px; padding-top: 14px;">
+            <div class="loader"></div>
+          </div>
+        {{/if}}
       {{/if}}
     </div>
   {{/each}}
@@ -63,8 +69,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h3>{{filename}}</h3>
-          {{#if endsWith filenameOnDisk '.mp4'}}
-            <video width="100%" style="width: 100%; min-height: 230px;" autoplay="true" controls="controls" src="uploads/{{filenameOnDisk}}"></video>
+          {{! #if endsWith filenameOnDisk '.mov' '.avi' '.mp4' '.mpeg' }}
+          {{#if webVideo }}
+            <video width="100%" style="width: 100%; min-height: 230px;" autoplay="true" controls="controls" src="uploads/{{webVideo}}"></video>
           {{/if}}
           {{#if endsWith filenameOnDisk '.jpg' '.png' '.gif' '.bmp'}}
             <img width="100%" src="uploads/{{filenameOnDisk}}">
@@ -72,10 +79,16 @@
           {{#if endsWith filenameOnDisk '.mp3' '.ogg'}}
             <audio width="100%" src="uploads/{{filenameOnDisk}}"></audio>
           {{/if}}
+          {{#if videoPreviewFrames}}
+            {{#each vpf in videoPreviewFrames}}
+              <img style="max-width:52px;" src="uploads/{{vpf}}">
+            {{/each}}
+          {{/if}}
           <a href="uploads/{{filenameOnDisk}}" target="_blank" class="btn">Download</a>
           <a href="#" class="btn" name="toggle-embed-code">Embed</a>
+          <a href="#" class="btn" name="delete">Delete</a>
           <div class="embed-code" style="display: none;">
-            {{#if endsWith filenameOnDisk '.mp4'}}
+            {{#if endsWith filenameOnDisk '.mov' '.avi' '.mp4'}}
               <textarea class="form-control">
                 <video autoplay="true" controls="controls" src="uploads/{{filenameOnDisk}}"></video> 
               </textarea>

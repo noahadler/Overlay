@@ -53,3 +53,7 @@ Meteor.startup ->
     #scan_directory '/var/www/hivedam-test/sites/default/files/hollywood-media/Photography/A\&S\ misc_project_photos/UK_misc'
     #scan_directory './files'
 
+FileRegistry.allow
+  insert: -> true
+  update: -> true
+  remove: -> true

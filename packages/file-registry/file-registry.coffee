@@ -36,7 +36,7 @@ if Meteor.isServer
 
   FileRegistry.scheduleJobsForFile = (filenameOnDisk) ->
     images = ['jpg', 'jpeg', 'png', 'gif', 'tif', 'tiff', 'tga', 'bmp', 'cr2']
-    videos = ['mp4', 'mpeg', 'avi', 'mov', 'webm', 'flv', 'mkv', '3gp', 'm4v', '3g2', 'm2v', 'wmv']
+    videos = ['mp4', 'mpeg', 'mpg', 'avi', 'mov', 'webm', 'flv', 'mkv', '3gp', 'm4v', '3g2', 'm2v', 'wmv']
     other = ['pdf', 'txt']
     Job.push new Md5Job filenameOnDisk: filenameOnDisk
     if endsWithAnyOf filenameOnDisk, images.concat(videos).concat(other)
@@ -45,6 +45,7 @@ if Meteor.isServer
       targetType = Meteor.settings.fileRegistry?.videoTargetType? or 'mp4'
       unless filenameOnDisk.toLowerCase().lastIndexOf(targetType.toLowerCase()) is filenameOnDisk.length-targetType.length #Don't convert something to the same type.
         Job.push new VideoTranscodeJob filenameOnDisk: filenameOnDisk, targetType: targetType
+      Job.push new VideoPreviewFramesJob filenameOnDisk: filenameOnDisk
 
 
   # Generates an action handler to serve files via iron:router server routes

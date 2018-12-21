@@ -51,7 +51,7 @@ Template.thumbnails.helpers
   basename: (path) ->
     path.split('/').pop()
   doc: ->
-    FileRegistry.find({}, {limit: 50})
+    FileRegistry.find()
   stillUploading: (f) ->
     u = UploadProgress.findOne {name: f.filename}
     u? && u.uploaded < u.total
@@ -77,8 +77,15 @@ Template.file_dialog.events
     Blaze.remove tpl.view
   'click a.btn[name=toggle-embed-code]': (e, tpl) ->
     tpl.$('.embed-code').toggle()
+  'click a.btn[name=delete]': (e, tpl) ->
+    console.log @, arguments
+    FileRegistry.remove(FileRegistry.findOne({filenameOnDisk: @filenameOnDisk})._id)
+
 
 Jobs = new Mongo.Collection 'jobs'
+Template.queue.onCreated ->
+  @subscribe 'jobs'
+
 Template.queue.helpers
   queuedItems: -> Jobs.find {}, {sort: {submitTime: -1}}
   fromNow: (date) ->
@@ -89,5 +96,3 @@ Template.queue.helpers
     , 5000
 
     moment(date).fromNow()
-
-
