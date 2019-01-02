@@ -5,6 +5,10 @@ Router.route '/', ->
   Session.set 'search', ''
   @render 'thumbnails'
 
+Router.route '/videos', ->
+  Session.set 'search', ''
+  @render 'videos'
+
 Router.route '/queue', ->
   @render 'queue'
 

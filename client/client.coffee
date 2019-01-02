@@ -81,6 +81,51 @@ Template.file_dialog.events
     console.log @, arguments
     FileRegistry.remove(FileRegistry.findOne({filenameOnDisk: @filenameOnDisk})._id)
 
+Template.videos.helpers
+  videos: ->
+    FileRegistry.find({videoPreviewFrames: {$exists: 1}})
+  stillUploading: (f) ->
+    u = UploadProgress.findOne {name: f.filename}
+    u? && u.uploaded < u.total
+  uploadProgressPercent: (f) ->
+    u = UploadProgress.findOne {name: f.filename}
+    if u?
+      parseInt ((100*u.uploaded)/u.total)
+  formatBytes: (byteCount) ->
+    if byteCount < 1024
+      return byteCount+" bytes"
+    if (kbCount = byteCount / 1024) < 1024
+      return kbCount.toFixed(0)+"KB"
+    if (mbCount = kbCount / 1024) < 1024
+      return mbCount.toFixed(1)+"MB"
+    if gbCount = mbCount / 1024
+      return gbCount.toFixed(2)+"GB"
+
+Template.videos.events
+  'click tr': (e, tpl) ->
+    Blaze.renderWithData Template.file_dialog, @, $('body').get(0)
+    $('#fileModal').modal('show')
+
+Template.videos_videostack.helpers
+  videoPreviewFrames: ->
+    {i:k, value: v, z: 100-k, left: k*15} for own k, v of @videoPreviewFrames
+  z: ->
+    if hpf = Template.instance().hoveredPreviewFrame.get()
+      100 - 10*Math.abs(hpf - parseInt(@i))
+    else
+      @z
+
+Template.videos_videostack.onCreated ->
+  Template.instance().hoveredPreviewFrame = new ReactiveVar(null);
+
+Template.videos_videostack.events
+  'mouseenter .video-stack > img': (e, tpl) ->
+    console.log 'hovering!', @, arguments
+    tpl.hoveredPreviewFrame.set @i
+  'mouseleave .video-stack': (e, tpl) ->
+    console.log 'leaving...'
+    tpl.hoveredPreviewFrame.set null
+
 
 Jobs = new Mongo.Collection 'jobs'
 Template.queue.onCreated ->

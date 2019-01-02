@@ -34,7 +34,8 @@
 <template name="tools">
   <h3>Tools</h3>
   <a class="btn span2" href="#"><i class="fa fa-upload"></i> Upload</a>
-  <a class="btn span2" href="/"><i class="fa fa-th"></i> Pinboard</a>
+  <a class="btn span2" href="/"><i class="fa fa-th"></i> Thumbnails</a>
+  <a class="btn span2" href="/videos"><i class="fa fa-film"></i> Videos</a>
   <a class="btn span2" href="#"><i class="fa fa-code-fork"></i> Network</a>
   <a class="btn span2" href="/map/"><i class="fa fa-globe"></i> Map</a>
   <a class="btn span2" href="#"><i class="fa fa-signal"></i> Visualize</a>
@@ -125,3 +126,39 @@
   </table>
 </template>
 
+<template name="videos">
+  <h3>Videos</h3>
+  <table class="table">
+    <tbody>
+      {{#each videos}}
+        <tr>
+          <td class="col-md-2">
+            <strong>{{filename}}</strong>
+            <div>{{formatBytes size}}</div>
+          </td>
+          <td>
+          {{#if stillUploading this}}
+            <progress value="{{uploadProgressPercent this}}" style="max-width: 64px;" max="100"></progress>
+          {{else}}
+            {{#if thumbnail}}
+              {{> videos_videostack}}
+            {{else}}
+              <div style="width: 64px; height: 48px; padding-top: 14px;">
+                <div class="loader"></div>
+              </div>
+            {{/if}}
+          {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="videos_videostack">
+  <div class="video-stack">
+    {{#each videoPreviewFrames}}
+      <img src="thumbnails/{{value}}" alt="{{i}}" style="left: {{left}}px; z-index: {{z}};"/>
+    {{/each}}
+  </div>
+</template>
